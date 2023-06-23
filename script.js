@@ -8,7 +8,7 @@ const scoreNumberEle = document.querySelector('.score-number');
 const clearBtn = document.querySelector('.clear');
 const submitBtn = document.querySelector('.submit-btn');
 const inputName = document.querySelector('input');
-let scoreNumber = 0, dataList = [] , id = 0;
+let scoreNumber = 0, dataList = [] 
 
 // const init = () => {
 //     createRandomNumber()
@@ -45,6 +45,7 @@ const addAnswerToOutputScreen = (e)=> {
 }
 
 const checkAnswer = ()=> {
+    let  id = 0;
     if (Number(output.innerHTML) === eval(`${firstNumber.innerHTML}${operator.innerHTML}${secondNumber.innerHTML}`)) {
         scoreNumber += 10;
         scoreNumberEle.innerHTML = scoreNumber;
@@ -52,8 +53,9 @@ const checkAnswer = ()=> {
         clearOutput()
         hideSubmitContainer()
     }
-    else
+    else {
       appearSubmitContainer()
+    }
 }
 
 const hideSubmitContainer = ()=> {
@@ -70,22 +72,22 @@ const clearOutput = () => {
     output.innerHTML = ''
 }
 
-const createladerboardElement = (dataList) => {
-    console.log(dataList);
+const createladerboardElement = ({id,name,score}) => {
     const div = document.createElement('div');
     div.className = 'player-info';
     div.innerHTML =
         `
-                <p>${dataList.id}</p>
-                <p>${dataList.name}</p>
-                <p>${dataList.score}</p>
+                <p>${id}</p>
+                <p>${name}</p>
+                <p>${score}</p>
              `
     document.querySelector('.player').append(div)
 }
 
 
 
-const addData = ()=> {  
+const addData = ()=> {
+    let id = 0;
     id++;
     const dataObj = {
         id: id,
@@ -93,17 +95,12 @@ const addData = ()=> {
         score: scoreNumber
     }
     dataList.push(dataObj)
-
-    // createladerboardElement(dataObj)
+    dataList.sort((a,b) => a.score - b.score)
+    createladerboardElement(dataObj)
     storeDataAtStorage(dataList)
-    sortScore(dataList)
+    inputName.value = ''
 }
 
-
-const sortScore = (dataList) => {
-    dataList.sort((a, b) => a.score - b.score)
-    createladerboardElement(dataList)
-}
 
 const storeDataAtStorage = (dataList)=> {
     localStorage.setItem('dataList',JSON.stringify(dataList))
@@ -117,7 +114,6 @@ const getDataFromLocalStorage =()=> {
 
 
 const displayData = (data)=> {
-    data.sort((a,b) => a.score - b.score)
     data.forEach(ele => {
         createladerboardElement(ele)
     })    
@@ -135,17 +131,7 @@ numbers.forEach(num =>{
     num.addEventListener('click', addAnswerToOutputScreen)
 })
 clearBtn.addEventListener('click',clearOutput)
-submitBtn.addEventListener('click',()=>{
-    addData()
-})
+submitBtn.addEventListener('click', addData)
 
-// function sortedArray(array,num) {
-//   let i ;
-//   for(i = array.length -1;i>=0 && array[i] > num ;i--) {
-//     array[i+1] = array[i]
-//   }
-//   array[i+1] = num
-// } 
-// let sort =  [1,3,5,7,9]
-// sortedArray(sort,4)
-// console.log(sort);
+
+
