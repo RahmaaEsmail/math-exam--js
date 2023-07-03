@@ -10,12 +10,6 @@ const submitBtn = document.querySelector('.submit-btn');
 const inputName = document.querySelector('input');
 let scoreNumber = 0, dataList = [] 
 
-// const init = () => {
-//     createRandomNumber()
-//     clearOutput()
-//     hideSubmitContainer()
-// }
-
 const createRandomNumber = ()=> {
     const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber<200 ? 20 : 30;
     const randomOne  = Math.floor(Math.random() * random)
@@ -45,7 +39,6 @@ const addAnswerToOutputScreen = (e)=> {
 }
 
 const checkAnswer = ()=> {
-    let  id = 0;
     if (Number(output.innerHTML) === eval(`${firstNumber.innerHTML}${operator.innerHTML}${secondNumber.innerHTML}`)) {
         scoreNumber += 10;
         scoreNumberEle.innerHTML = scoreNumber;
@@ -72,35 +65,46 @@ const clearOutput = () => {
     output.innerHTML = ''
 }
 
-const createladerboardElement = ({id,name,score}) => {
-    const div = document.createElement('div');
-    div.className = 'player-info';
-    div.innerHTML =
-        `
-                <p>${id}</p>
-                <p>${name}</p>
-                <p>${score}</p>
+const createladerboardElement = (dataList) => {
+    dataList.forEach(data => {
+        const div = document.createElement('div');
+        div.className = 'player-info';
+        div.innerHTML =
+            `
+                <p>${data.id}</p>
+                <p>${data.name}</p>
+                <p>${data.score}</p>
              `
-    document.querySelector('.player').append(div)
+        document.querySelector('.player').append(div)
+            })
 }
-
 
 
 const addData = ()=> {
-    let id = 0;
-    id++;
     const dataObj = {
-        id: id,
+        id : (Date.now()) / 2 ,
         name: inputName.value,
         score: scoreNumber
     }
-    dataList.push(dataObj)
-    dataList.sort((a,b) => a.score - b.score)
-    createladerboardElement(dataObj)
-    storeDataAtStorage(dataList)
-    inputName.value = ''
+    let index;
+    for (let i = dataList.length - 1; i >= 0; i--)
+        if (dataList[i].score > dataObj.score) {
+            index = dataList.indexOf(dataList[i])
+        }
+    if(index != undefined) {
+    dataList.splice(index, 0, dataObj)
+        createladerboardElement(dataList)
+        storeDataAtStorage(dataList)
 }
 
+    else{
+        dataList.push(dataObj)
+        createladerboardElement(dataList)
+        storeDataAtStorage(dataList)
+    }
+    inputName.value = ''
+    submitBtn.disabled = true 
+}
 
 const storeDataAtStorage = (dataList)=> {
     localStorage.setItem('dataList',JSON.stringify(dataList))
@@ -114,9 +118,7 @@ const getDataFromLocalStorage =()=> {
 
 
 const displayData = (data)=> {
-    data.forEach(ele => {
-        createladerboardElement(ele)
-    })    
+   createladerboardElement(data)   
 }
 
 const init = () => {
@@ -126,12 +128,10 @@ const init = () => {
 init()
 
 
+
 enterBtn.addEventListener('click',checkAnswer)
 numbers.forEach(num =>{
     num.addEventListener('click', addAnswerToOutputScreen)
 })
 clearBtn.addEventListener('click',clearOutput)
 submitBtn.addEventListener('click', addData)
-
-
-

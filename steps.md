@@ -5,6 +5,5 @@
 5 - if userAnswer == caluclation answer increase score 10
 6 - then clear output
 7 - sort the score
-8 - add id 
 9 - change init stord fun
 10 - empty input after add name
