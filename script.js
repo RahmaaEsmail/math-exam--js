@@ -7,46 +7,43 @@ const submitBtn = document.querySelector('.submit-btn');
 const firstNumber = document.querySelector('.num-one');
 const secondNumber = document.querySelector('.num-two');
 const operator = document.querySelector('.operator');
-let scoreNumber = 0, dataList = [] 
+let scoreNumber = 0, dataList = []
 
 const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber < 200 ? 20 : 30;
 const randomOne = Math.floor(Math.random() * random)
 const randomTwo = Math.floor(Math.random() * random)
 const randomOperator = Math.floor(Math.random() * 4)
 
-const createRandomNumber = ()=> {
-    const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber<200 ? 20 : 30;
-    let randomOne  = Math.floor(Math.random() * random)
-    let randomTwo = Math.floor(Math.random() * random)
-    let randomOperator = Math.floor(Math.random() * 4)
-    if(randomOne == 0 && randomTwo == 0 && randomOperator == 3) {
-        randomTwo = Math.floor(Math.random() * random)
-    }
-    assignRandomNumToElement(randomOne,randomTwo,randomOperator)
+const createRandomNumber = () => {
+    const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber < 200 ? 20 : 30;
+    const randomOne = Math.floor(Math.random() * random) + 1
+    const randomTwo = Math.floor(Math.random() * random)
+    const randomOperator = Math.floor(Math.random() * 4)
+    assignRandomNumToElement(randomOne, randomTwo, randomOperator)
 }
 
-const assignRandomNumToElement = (randomOne, randomTwo, randomOperator)=> {
-    let result ;
+const assignRandomNumToElement = (randomOne, randomTwo, randomOperator) => {
+    let result;
     firstNumber.innerHTML = randomOne;
     secondNumber.innerHTML = randomTwo;
     operator.innerHTML = randomOperator == 0 ? '+' : randomOperator == 1 ? '-' : randomOperator == 2 ? '*' : '/'
-    if(operator.innerHTML === '/') {
+    if (operator.innerHTML === '/') {
         const multi = eval(`${firstNumber.innerHTML}*${secondNumber.innerHTML}`)
         secondNumber.innerHTML = firstNumber.innerHTML
-        firstNumber.innerHTML = multi 
-        result =(eval(`${multi}${operator.innerHTML}${firstNumber.innerHTML}`));
+        firstNumber.innerHTML = multi
+        result = (eval(`${multi}${operator.innerHTML}${firstNumber.innerHTML}`));
     }
     else
-      result = eval(`${firstNumber.innerHTML}${operator.innerHTML}${secondNumber.innerHTML}`)
+        result = eval(`${firstNumber.innerHTML}${operator.innerHTML}${secondNumber.innerHTML}`)
 }
-assignRandomNumToElement(randomOne, randomTwo,randomOperator)
+assignRandomNumToElement(randomOne, randomTwo, randomOperator)
 
-const addAnswerToOutputScreen = (e)=> {
+const addAnswerToOutputScreen = (e) => {
     let num = e.target.innerHTML
     output.innerHTML += num
 }
 
-const checkAnswer = ()=> {
+const checkAnswer = () => {
     if (Number(output.innerHTML) === eval(`${firstNumber.innerHTML}${operator.innerHTML}${secondNumber.innerHTML}`)) {
         scoreNumber += 10;
         scoreNumberEle.innerHTML = scoreNumber;
@@ -55,11 +52,11 @@ const checkAnswer = ()=> {
         hideSubmitContainer()
     }
     else {
-      appearSubmitContainer()
+        appearSubmitContainer()
     }
 }
 
-const hideSubmitContainer = ()=> {
+const hideSubmitContainer = () => {
     document.querySelector('.submit-container').classList.add('hide')
     document.querySelector('.questions').classList.remove('hide')
 }
@@ -81,7 +78,7 @@ const createladerboardElement = (dataList) => {
         let div = document.createElement('div');
         div.className = 'player-info';
         div.innerHTML =
-        `
+            `
         <p>${i++}</p>
         <p>${data.name}</p>
         <p>${data.score}</p>
@@ -91,19 +88,21 @@ const createladerboardElement = (dataList) => {
 }
 
 
-const addData = ()=> {
+const addData = () => {
     const inputName = document.querySelector('input');
     const dataObj = {
-        id : (Date.now()) / 2 ,
+        id: (Date.now()) / 2,
         name: inputName.value,
         score: scoreNumber
     }
     setScoreInSortedPosition(dataObj)
     inputName.value = ''
-    submitBtn.disabled = true 
+    hideSubmitContainer()
+    clearOutput()
+    createRandomNumber()
 }
 
-const setScoreInSortedPosition = (dataObj) =>{
+const setScoreInSortedPosition = (dataObj) => {
     let index;
     for (let i = dataList.length - 1; i >= 0; i--)
         if (dataList[i].score > dataObj.score) {
@@ -111,7 +110,7 @@ const setScoreInSortedPosition = (dataObj) =>{
         }
     if (index != undefined) {
         dataList.splice(index, 0, dataObj)
-        createladerboardElement(dataList) 
+        createladerboardElement(dataList)
         storeDataAtStorage(dataList)
     }
 
@@ -122,19 +121,19 @@ const setScoreInSortedPosition = (dataObj) =>{
     }
 }
 
-const storeDataAtStorage = (dataList)=> {
-    localStorage.setItem('dataList',JSON.stringify(dataList))
+const storeDataAtStorage = (dataList) => {
+    localStorage.setItem('dataList', JSON.stringify(dataList))
 }
 
-const getDataFromLocalStorage =()=> {
-  if(localStorage.getItem('dataList')) 
-     return JSON.parse(localStorage.getItem('dataList'))
-  return [] ;
+const getDataFromLocalStorage = () => {
+    if (localStorage.getItem('dataList'))
+        return JSON.parse(localStorage.getItem('dataList'))
+    return [];
 }
 
 
-const displayData = (data)=> {
-   createladerboardElement(data)   
+const displayData = (data) => {
+    createladerboardElement(data)
 }
 
 const init = () => {
@@ -144,9 +143,9 @@ const init = () => {
 init()
 
 
-enterBtn.addEventListener('click',checkAnswer)
-numbers.forEach(num =>{
+enterBtn.addEventListener('click', checkAnswer)
+numbers.forEach(num => {
     num.addEventListener('click', addAnswerToOutputScreen)
 })
-clearBtn.addEventListener('click',clearOutput)
+clearBtn.addEventListener('click', clearOutput)
 submitBtn.addEventListener('click', addData)
