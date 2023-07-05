@@ -4,6 +4,9 @@ const numbers = document.querySelectorAll('.num');
 const scoreNumberEle = document.querySelector('.score-number');
 const clearBtn = document.querySelector('.clear');
 const submitBtn = document.querySelector('.submit-btn');
+const firstNumber = document.querySelector('.num-one');
+const secondNumber = document.querySelector('.num-two');
+const operator = document.querySelector('.operator');
 let scoreNumber = 0, dataList = [] 
 
 const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber < 200 ? 20 : 30;
@@ -13,18 +16,17 @@ const randomOperator = Math.floor(Math.random() * 4)
 
 const createRandomNumber = ()=> {
     const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber<200 ? 20 : 30;
-    const randomOne  = Math.floor(Math.random() * random)
-    const randomTwo = Math.floor(Math.random() * random)
-    const randomOperator = Math.floor(Math.random() * 4)
+    let randomOne  = Math.floor(Math.random() * random)
+    let randomTwo = Math.floor(Math.random() * random)
+    let randomOperator = Math.floor(Math.random() * 4)
+    if(randomOne == 0 && randomTwo == 0 && randomOperator == 3) {
+        randomTwo = Math.floor(Math.random() * random)
+    }
     assignRandomNumToElement(randomOne,randomTwo,randomOperator)
 }
 
 const assignRandomNumToElement = (randomOne, randomTwo, randomOperator)=> {
     let result ;
-    const firstNumber = document.querySelector('.num-one');
-    const secondNumber = document.querySelector('.num-two');
-    const operator = document.querySelector('.operator');
-
     firstNumber.innerHTML = randomOne;
     secondNumber.innerHTML = randomTwo;
     operator.innerHTML = randomOperator == 0 ? '+' : randomOperator == 1 ? '-' : randomOperator == 2 ? '*' : '/'
