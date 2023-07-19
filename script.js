@@ -98,6 +98,7 @@ const addData = () => {
     setScoreInSortedPosition(dataObj)
     inputName.value = ''
     hideSubmitContainer()
+    scoreNumber = 0
     scoreNumberEle.innerHTML = 0;
     clearOutput()
     createRandomNumber()
