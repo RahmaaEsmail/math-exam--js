@@ -7,10 +7,10 @@ const submitBtn = document.querySelector('.submit-btn');
 const firstNumber = document.querySelector('.num-one');
 const secondNumber = document.querySelector('.num-two');
 const operator = document.querySelector('.operator');
-let scoreNumber = 0, dataList = []
+let scoreNumber = 0, dataList = [];
 
 const random = scoreNumber < 100 ? 10 : scoreNumber >= 100 && scoreNumber < 200 ? 20 : 30;
-const randomOne = Math.floor(Math.random() * random)
+const randomOne = Math.floor(Math.random() * random) + 1
 const randomTwo = Math.floor(Math.random() * random)
 const randomOperator = Math.floor(Math.random() * 4)
 
@@ -98,6 +98,7 @@ const addData = () => {
     setScoreInSortedPosition(dataObj)
     inputName.value = ''
     hideSubmitContainer()
+    scoreNumberEle.innerHTML = 0;
     clearOutput()
     createRandomNumber()
 }
